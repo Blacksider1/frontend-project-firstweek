@@ -1,9 +1,12 @@
-import './App.scss'
+import styles from './App.module.scss'
+// import Menu from './OpenMenu/Menu';
+import Modal from './OpenModal/Modal';
 
 function App() {
   return (
-    <div className="app">
-      
+    <div className={styles.div}>
+      {/* <Menu /> */}
+      <Modal />
     </div>
   );
 }
