@@ -9,14 +9,23 @@ import { useEffect, useState } from "react";
 import { fetchCategory } from "../reducers/Slice/categorySlice";
 import { fetchProducts } from "../reducers/Slice/productSlice";
 import Menu from "../MainMenu/OpenMenu/Menu";
+import Basket from '../components/Basket'
+import { addBasket } from "../reducers/Slice/cartSlice";
+
+
+
 function ProductPage() {
+
   const dispatch = useDispatch();
   const category = useSelector((state) => state.reducerCategory.category);
   const products = useSelector((state) => state.reducerProduct.products);
   const error = useSelector((state) => state.reducerProduct.error);
+  const basketId = useSelector((state) => state.cartSlice.basketId);
+
 
   const [menuWindow, setMenuWindow] = useState(false);
   const [modalWindow, setModalWindow] = useState(false);
+  const [basketWindow, setbasketWindow] = useState(false)
   console.log(products);
 
   if (error) {
@@ -26,6 +35,15 @@ function ProductPage() {
     dispatch(fetchCategory());
     dispatch(fetchProducts());
   }, [dispatch]);
+
+ const addToBasket = (id) => {
+  dispatch(addBasket({basketId, id}))
+ }
+
+  const handleOpenBasket = () => {
+    setbasketWindow(!basketWindow)
+  }
+
   return (
     <>
       <div className={style.mainProductPage}>
@@ -55,7 +73,7 @@ function ProductPage() {
                 <div className={style.priceAndButton}>
                   {" "}
                   <p className={style.ItemPrice}>{item.price}₽</p>{" "}
-                  <button className={style.basketButton}>В Корзину</button>
+                  <button onClick={() => addToBasket(item._id)} className={style.basketButton}>В Корзину</button>
                 </div>
               </div>
             ))}
@@ -63,7 +81,8 @@ function ProductPage() {
         </div>
         <header className={style.contentMenuProduct}>
           <img src={logoUser} alt="d" />
-          <img src={logoBasket} alt="d" />
+          <img src={logoBasket} alt="d" onClick={handleOpenBasket} />
+          {basketWindow && <Basket/>}
         </header>
       </div>
 

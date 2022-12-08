@@ -58,8 +58,8 @@ function ContactsComponent() {
               <p className={style.colorText}>Время работы</p>
               <p className={style.colorText}>Пн-Вск с 09:00 до 00:00</p>
               <div className={style.buttonsAdress}>
-                <dutton className={style.adressBtn}>Бронь столика</dutton>
-                <dutton className={style.adressBtn}>Задать вопрос</dutton>
+                <button className={style.adressBtn}>Бронь столика</button>
+                <button className={style.adressBtn}>Задать вопрос</button>
               </div>
             </div>
           </div>
