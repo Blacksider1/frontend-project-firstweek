@@ -6,8 +6,7 @@ import entryX from "../EntryWindow/files/eva_close-fill.png";
 import logo from "../EntryWindow/files/logo.png";
 import { motion } from "framer-motion";
 
-function Entry({entryWindow, setEntryWindow, registration, setRegistration}) {
-
+function Entry({ entryWindow, setEntryWindow, registration, setRegistration }) {
   const animationConfiguration = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
@@ -15,13 +14,13 @@ function Entry({entryWindow, setEntryWindow, registration, setRegistration}) {
   };
 
   const handleEntry = () => {
-  setEntryWindow(false)
-  }
+    setEntryWindow(false);
+  };
 
-  const handleRegistration =() => {
-    setEntryWindow(false)
-    setRegistration(true)
-  }
+  const handleRegistration = () => {
+    setEntryWindow(false);
+    setRegistration(true);
+  };
 
   const [value, setValue] = useState("");
   const [password, setPassword] = useState("");
@@ -50,22 +49,24 @@ function Entry({entryWindow, setEntryWindow, registration, setRegistration}) {
     if (error) {
       return <div>{error}</div>;
     }
+    console.log(error);
   };
 
   return (
-    <div drag
-    dragConstraints={{
-      top: -150,
-      left: -150,
-      right: 150,
-      bottom: 150,
-    }} className={styles.entryParent}>
-      <div variants={animationConfiguration}
-        className={styles.blockEntry}>
-        <button className={styles.divX}  onClick={() => handleEntry()}   >
+    <div
+      drag
+      dragConstraints={{
+        top: -150,
+        left: -150,
+        right: 150,
+        bottom: 150,
+      }}
+      className={styles.entryParent}
+    >
+      <div variants={animationConfiguration} className={styles.blockEntry}>
+        <button className={styles.divX} onClick={() => handleEntry()}>
           X
         </button>
-
         <div className={styles.divLogo}>
           <img className={styles.imgLogo} src={logo} alt="logo" />
         </div>
@@ -93,16 +94,20 @@ function Entry({entryWindow, setEntryWindow, registration, setRegistration}) {
             />
           </div>
           <div className={styles.blockBtnEntry}>
-          <button className={styles.registrationBtn} onClick={() => handleRegistration()} >зарегестрироваться</button>
-            <button 
-             className={styles.btnEntry} type="submit">
+            <button
+              className={styles.registrationBtn}
+              onClick={() => handleRegistration()}
+            >
+              Зарегистрироваться
+            </button>
+            <button className={styles.btnEntry} type="submit">
               Войти
-          </button>
-        </div>
+            </button>
+          </div>
         </form>
       </div>
     </div>
   );
-};
+}
 
 export default Entry;
