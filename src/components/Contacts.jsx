@@ -76,7 +76,6 @@ function ContactsComponent() {
                   whileTap={{ scale: 0.9 }}
                   className={style.adressBtn}>Задать вопрос
                 </motion.button>
-
               </div>
             </div>
           </motion.div>

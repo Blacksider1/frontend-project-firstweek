@@ -9,17 +9,25 @@ import { useEffect, useState } from "react";
 import { fetchCategory } from "../reducers/Slice/categorySlice";
 import { fetchProducts } from "../reducers/Slice/productSlice";
 import Menu from "../MainMenu/OpenMenu/Menu";
+import Basket from '../components/Basket'
+import { addBasket, getBasket } from "../reducers/Slice/cartSlice";
+import ProductCart from "./ProductCart";
 import Lottie from "lottie-react";
 
 function ProductPage() {
+
   const dispatch = useDispatch();
   const category = useSelector((state) => state.categoryReducer.category);
   const products = useSelector((state) => state.productSlice.products);
   const error = useSelector((state) => state.productSlice.error);
   const preloader = useSelector((state) => state.productSlice.loading);
-  const [search, setSearch] = useState("");
+
+
   const [menuWindow, setMenuWindow] = useState(false);
   const [modalWindow, setModalWindow] = useState(false);
+  const [basketWindow, setbasketWindow] = useState(false)
+
+  const [search, setSearch] = useState("");
   const [activeIndex, setActiveIndex] = useState(null);
   const [sorted, setSorted] = useState([]);
 
@@ -35,6 +43,7 @@ function ProductPage() {
   useEffect(() => {
     dispatch(fetchCategory());
     dispatch(fetchProducts());
+    dispatch(getBasket())
     setSorted(
       products.filter((item) =>
         !activeIndex ? item : item.categoryId[0] === activeIndex
@@ -98,25 +107,13 @@ function ProductPage() {
             />
           </div>
           <div className={style.products}>
-
-            {filterR.map((item) => (
-              <div key={item._id} className={style.itemProduct}>
-                <div>
-                  <img className={style.img} src={item.img} alt="f" />
-                </div>
-                <p className={style.ItemName}>{item.name}</p>
-                <div className={style.priceAndButton}>
-                  {" "}
-                  <p className={style.ItemPrice}>{item.price}₽</p>{" "}
-                  <button className={style.basketButton}>В Корзину</button>
-                </div>
-              </div>
-            ))}
+            {filterR.map((item) => <ProductCart item={item}/>)}
           </div>
         </div>
         <header className={style.contentMenuProduct}>
           <img src={logoUser} alt="d" />
-          <img src={logoBasket} alt="d" />
+          {/* <img src={logoBasket} alt="d" onClick={handleOpenBasket} /> */}
+          <Basket/>
         </header>
       </div>
 
