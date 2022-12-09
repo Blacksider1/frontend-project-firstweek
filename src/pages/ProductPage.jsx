@@ -98,7 +98,6 @@ function ProductPage() {
             />
           </div>
           <div className={style.products}>
-            {preloader ? <span class={style.loader}></span> : null}
 
             {filterR.map((item) => (
               <div key={item._id} className={style.itemProduct}>
