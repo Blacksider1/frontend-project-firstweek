@@ -3,7 +3,7 @@ import styles from './Modal.module.scss';
 import xDelete from './filesModal/eva_close-fill.png';
 import logo from './filesModal/logo.png';
 import Booking from './Booking/DateTimeSelect';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addBooking, fetchBooking } from '../../reducers/Slice/bookingSlice';
 import NumberTableModal from './Booking/NumberTableModal';
 import { motion } from 'framer-motion';
@@ -17,6 +17,9 @@ function ModalWindow({ setModalWindow, modalWindow }) {
   const [dateTime, setDateTime] = useState({ date: '00-00-0000', time: '00:00' });
   const [numberTable, setNumberTable] = useState();
   const [isEqualDataBooking, setIsEqualDataBooking] = useState(false);
+  const [isTokenEmpty, setIsTokenEmpty] = useState(false)
+
+  const token = useSelector(state => state.bookingReducer.token)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -45,14 +48,19 @@ function ModalWindow({ setModalWindow, modalWindow }) {
   };
 
   const handleAddBooking = () => {
-    if (number && dateTime.date !== '00:00:0000' && dateTime.time !== '00:00' && numberTable) {
-      dispatch(addBooking(dataBooking));
-      setIsEqualDataBooking(false);
-    } else {
-      setIsEqualDataBooking(true);
+    if(token) {
+      if (number && dateTime.date !== '00:00:0000' && dateTime.time !== '00:00' && numberTable) {
+        dispatch(addBooking(dataBooking));
+        setIsEqualDataBooking(false);
+      } else {
+        setIsEqualDataBooking(true);
+      }
+      setName('');
+      setNumber('');
     }
-    setName('');
-    setNumber('');
+    else {
+      setIsTokenEmpty(true)
+    }
     console.log(numberTable);
   };
 
@@ -165,6 +173,7 @@ function ModalWindow({ setModalWindow, modalWindow }) {
                 </div>
               )}
             </div>
+            {isTokenEmpty && <a href='#' className={styles.error_token}>Авторизуйтесь!</a>}
             <div className={styles.divBtnBooking}>
               <motion.button
                 whileHover={{ scale: 1.1 }}
@@ -173,7 +182,9 @@ function ModalWindow({ setModalWindow, modalWindow }) {
                 onClick={handleAddBooking}>
                 Забронировать
               </motion.button>
+              
             </div>
+           
           </motion.div>
         </div>
       </div>

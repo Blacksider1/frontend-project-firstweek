@@ -5,7 +5,7 @@ import style from './dateTimeSelect.module.scss';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 
-const BookingTable = ({ setOpenWindowDate, setDateTime, dateTime}) => {
+const BookingTable = ({ setOpenWindowDate, setDateTime, dateTime }) => {
   const animationConfiguration = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
@@ -18,13 +18,16 @@ const BookingTable = ({ setOpenWindowDate, setDateTime, dateTime}) => {
   const [date, setDate] = useState('');
   const [nowTime, setNowTime] = useState(moment().format('HH:mm'));
   const [isEqualDate, setIsEqualDate] = useState(false);
+  const [isEqualAddDate, setIsEqualAddDate] = useState(false);
   const [isEqualTime, setIsEqualTime] = useState(false);
 
   moment.locale('ru', localization);
 
-  const data = useSelector((state) => state.bookingReducer.booking);
-
-  console.log(dateTime);
+  const arrTimeIsBD = useSelector((state) => state.bookingReducer.booking).map((dateIs) => {
+    if (dateIs.date === date) {
+      return (dateIs = dateIs.time);
+    }
+  });
 
   const defaultProps = {
     weekDayNames: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
@@ -79,27 +82,41 @@ const BookingTable = ({ setOpenWindowDate, setDateTime, dateTime}) => {
     for (let i = 0; i < daysMonthValue; i++) {
       arrDays.push(i);
     }
-    return arrDays.map((day) => (
+    return arrDays.map((day) => {
+      return (
       <button key={day} className={style.switchMonthButton} onClick={() => handleAddDay(day + 1)}>
         {day + 1}
       </button>
-    ));
+      )
+  });
   };
 
   const handleSelectTime = (timeValue) => {
-    setTime(timeValue);
-    setIsEqualTime(false)
+    if(dateTime.date !== '00-00-0000' || date !== '') {
+      setTime(timeValue);
+      setIsEqualTime(false);
+      setIsEqualAddDate(false)
+    }
+    else {
+      setIsEqualAddDate(true)
+    }
   };
 
   const printTimeInDays = () => {
-    return timeForSelect.map((timeSelect) => (
-      <button
-        key={timeSelect}
-        className={style.selectTimeButton}
-        onClick={() => handleSelectTime(timeSelect)}>
-        {timeSelect}
-      </button>
-    ));
+    return timeForSelect.map((timeSelect) => {
+      const isTime = arrTimeIsBD.find((arrTime) => arrTime === timeSelect);
+      const disabled = isTime ? {backgroundColor: 'gray'} : {}
+      return (
+        <button
+          key={timeSelect}
+          className={style.selectTimeButton}
+          onClick={() => handleSelectTime(timeSelect)}
+          disabled={isTime}
+          style={disabled}>
+          {timeSelect}
+        </button>
+      );
+    });
   };
 
   const handleSubstractValueMonth = () => {
@@ -117,12 +134,12 @@ const BookingTable = ({ setOpenWindowDate, setDateTime, dateTime}) => {
   useEffect(() => {
     if (day) {
       setDate(day.toString() + '-' + monthYear.toString());
-      setIsEqualDate(false)
-      if(time !== '00:00') {
-        setIsEqualTime(false)
-      }
-      else {
-        setIsEqualTime(true)
+      setIsEqualDate(false);
+      setIsEqualAddDate(false)
+      if (time !== '00:00') {
+        setIsEqualTime(false);
+      } else {
+        setIsEqualTime(true);
       }
     }
   }, [monthYear, day, date]);
@@ -132,14 +149,14 @@ const BookingTable = ({ setOpenWindowDate, setDateTime, dateTime}) => {
   }, 1000);
 
   const handleSubmitData = () => {
-    if(dateTime.date !== '00-00-0000' || time !== '00:00'){
-      setDateTime({ time, date })
-      setIsEqualDate(false)
-    }else{
-      setIsEqualDate(true)
+    if (dateTime.date !== '00-00-0000' || time !== '00:00') {
+      setDateTime({ time, date });
+      setIsEqualDate(false);
+    } else {
+      setIsEqualDate(true);
     }
-    if(time === '00:00') {
-      setIsEqualTime(true)
+    if (time === '00:00') {
+      setIsEqualTime(true);
     }
   };
 
@@ -149,21 +166,21 @@ const BookingTable = ({ setOpenWindowDate, setDateTime, dateTime}) => {
 
   return (
     <motion.div
-            variants={animationConfiguration}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.5 }}>
+      variants={animationConfiguration}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={{ duration: 0.5 }}>
       <div className={style.booking}>
         <div className={style.date_booking}>
           <p className={style.selectedDate}>{`Введенная дата: ${!date ? dateTime.date : date}`}</p>
           <div className={style.calendar}>
             <div className={style.switchMonth}>
-
-              <motion.button 
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              className={style.month_substract} onClick={handleSubstractValueMonth}>
+              <motion.button
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+                className={style.month_substract}
+                onClick={handleSubstractValueMonth}>
                 {'<'}
               </motion.button>
 
@@ -171,13 +188,13 @@ const BookingTable = ({ setOpenWindowDate, setDateTime, dateTime}) => {
                 {moment(monthYear, 'MM YYYY').format('MMMM YYYY')}
               </span>
 
-              <motion.button 
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              className={style.month_add} onClick={handleAddValueMonth}>
+              <motion.button
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+                className={style.month_add}
+                onClick={handleAddValueMonth}>
                 {'>'}
               </motion.button>
-
             </div>
             <div className={style.week_booking}>
               {weekDayNames.map((week) => (
@@ -189,14 +206,15 @@ const BookingTable = ({ setOpenWindowDate, setDateTime, dateTime}) => {
             <div className={style.booking_days}>{printDaysInMonth()}</div>
             {isEqualDate && <p className={style.error_date}>Проверьте дату!!!</p>}
             {isEqualTime && <p className={style.error_date}>Проверьте время!!!</p>}
+            {isEqualAddDate && <p className={style.error_date}>Добавьте дату!!!</p>}
           </div>
         </div>
         <div className={style.time_booking}>
-
-          <motion.button  
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.95 }}
-              className={style.close_window_but} onClick={handleCloseWindow}>
+          <motion.button
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.95 }}
+            className={style.close_window_but}
+            onClick={handleCloseWindow}>
             x
           </motion.button>
 
@@ -205,14 +223,13 @@ const BookingTable = ({ setOpenWindowDate, setDateTime, dateTime}) => {
         </div>
       </div>
       <div className={style.submit_data}>
-
-        <motion.button  
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className={style.submit_data_button} onClick={handleSubmitData}>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className={style.submit_data_button}
+          onClick={handleSubmitData}>
           Отправить дату и время
         </motion.button>
-
       </div>
     </motion.div>
   );
