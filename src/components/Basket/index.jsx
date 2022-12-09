@@ -17,7 +17,7 @@ const CartItem = () => {
   const handleCartOpen = () => setOpened(!opened);
 
   const basket = useSelector((state) => state.cartSlice.basket);
-  const products = useSelector((state) => state.reducerProduct.products);
+  const products = useSelector((state) => state.productSlice.products);
 
   console.log("PROD", products);
 

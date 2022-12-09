@@ -18,7 +18,7 @@ const ProductCart = ({item}) => {
        console.log('ONCART',onCart)
 
     return (
-        <div className={style.itemProduct}>
+        <div key={item._id} className={style.itemProduct}>
         <div>
           <img className={style.img} src={item.img} alt="f" />
         </div>

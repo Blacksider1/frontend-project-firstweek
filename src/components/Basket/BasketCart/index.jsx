@@ -5,7 +5,7 @@ import styles from "./basketCart.module.scss";
 
 const BasketCart = ({ item }) => {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.reducerProduct.products);
+  const products = useSelector((state) => state.productSlice.products);
 
   //   useEffect(() => {
 //     setTotals(products.reduce((prev, item) => prev+= item.price))

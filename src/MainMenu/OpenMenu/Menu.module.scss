@@ -5,6 +5,8 @@
   display: grid;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  z-index: 200;
 
   .frame1 {
     display: grid;
