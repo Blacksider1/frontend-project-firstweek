@@ -10,7 +10,8 @@ import { fetchCategory } from "../reducers/Slice/categorySlice";
 import { fetchProducts } from "../reducers/Slice/productSlice";
 import Menu from "../MainMenu/OpenMenu/Menu";
 import Basket from '../components/Basket'
-import { addBasket } from "../reducers/Slice/cartSlice";
+import { addBasket, getBasket } from "../reducers/Slice/cartSlice";
+import ProductCart from "./ProductCart";
 
 
 
@@ -20,7 +21,7 @@ function ProductPage() {
   const category = useSelector((state) => state.reducerCategory.category);
   const products = useSelector((state) => state.reducerProduct.products);
   const error = useSelector((state) => state.reducerProduct.error);
-  const basketId = useSelector((state) => state.cartSlice.basketId);
+
 
 
   const [menuWindow, setMenuWindow] = useState(false);
@@ -34,15 +35,9 @@ function ProductPage() {
   useEffect(() => {
     dispatch(fetchCategory());
     dispatch(fetchProducts());
+    dispatch(getBasket())
   }, [dispatch]);
 
- const addToBasket = (id) => {
-  dispatch(addBasket({basketId, id}))
- }
-
-  const handleOpenBasket = () => {
-    setbasketWindow(!basketWindow)
-  }
 
   return (
     <>
@@ -64,25 +59,13 @@ function ProductPage() {
             ))}
           </div>
           <div className={style.products}>
-            {products.map((item) => (
-              <div className={style.itemProduct}>
-                <div>
-                  <img className={style.img} src={item.img} alt="f" />
-                </div>
-                <p className={style.ItemName}>{item.name}</p>
-                <div className={style.priceAndButton}>
-                  {" "}
-                  <p className={style.ItemPrice}>{item.price}₽</p>{" "}
-                  <button onClick={() => addToBasket(item._id)} className={style.basketButton}>В Корзину</button>
-                </div>
-              </div>
-            ))}
+            {products.map((item) => <ProductCart item={item}/>)}
           </div>
         </div>
         <header className={style.contentMenuProduct}>
           <img src={logoUser} alt="d" />
-          <img src={logoBasket} alt="d" onClick={handleOpenBasket} />
-          {basketWindow && <Basket/>}
+          {/* <img src={logoBasket} alt="d" onClick={handleOpenBasket} /> */}
+          <Basket/>
         </header>
       </div>
 
