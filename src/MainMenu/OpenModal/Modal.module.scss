@@ -10,7 +10,7 @@
 
       .bookingWindow {
         width: 22%;
-        height: 60%;
+        height: 70%;
         background-color: #333333;
         z-index: 20;
 
@@ -117,6 +117,15 @@
             position: absolute;
             width: 40.5%;
             top: 120px;
+          }
+        }
+        .error_token {
+          color:white;
+          line-height: 0px;
+          text-decoration: none;
+          margin-left: 95px;
+          &:hover {
+            text-decoration: underline;
           }
         }
 
